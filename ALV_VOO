@@ -1,0 +1,12 @@
+REPORT ZRPG_ALV.
+
+DATA: T_flight TYPE STANDARD TABLE OF sflight.
+
+START-OF-SELECTION.
+  PERFORM inserir_dados.
+  
+  
+FORM inserir_dados.
+  
+  
+  ENDFORM.
