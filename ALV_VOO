@@ -1,3 +1,8 @@
+*&---------------------------------------------------------------------*
+*& Report ZRPG_ALV
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
 REPORT zrpg_alv.
 
 DATA: T_flight TYPE STANDARD TABLE OF sflight,
@@ -7,26 +12,35 @@ DATA: T_flight TYPE STANDARD TABLE OF sflight,
 START-OF-SELECTION.
   PERFORM inserir_dados.
   PERFORM exibir_ALV.
-  
+
 FORM inserir_dados.
 
-  SELECT * 
-    FROM sflight 
+  SELECT *
+    FROM sflight
     INTO TABLE T_flight.
-      
-  LOOP AT T_flight into sflight.
-    WRITE sflight-carrid.
-  ENDLOOP.
-
+    
+*  LOOP AT T_flight into sflight.
+*    WRITE sflight-carrid.
+*  ENDLOOP.
 
 ENDFORM.
 
 FORM exibir_ALV.
 CALL METHOD cl_salv_table=>factory
-IMPORTING
+  IMPORTING
   r_salv_table = cl_table
-CHANGING
+  CHANGING
   t_table      = T_flight.
 
+PERFORM Inserir_funcoes.
+
 CALL METHOD cl_table=>display.
+ENDFORM.
+
+FORM Inserir_funcoes.
+ DATA: lc_funcoes TYPE REF TO cl_salv_functions.
+
+ lc_funcoes - cl_table->get_functions().
+ lc_funcoes->set_all( ABAP_TRUE ).
+
 ENDFORM.
