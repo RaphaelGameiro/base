@@ -28,5 +28,5 @@ IMPORTING
 CHANGING
   t_table      = T_flight.
 
-CALL METHOD 
+CALL METHOD cl_table=>display.
 ENDFORM.
