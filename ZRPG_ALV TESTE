@@ -10,8 +10,8 @@ TABLES: SFLIGHT.
 DATA:it_sflight TYPE TABLE OF sflight.
 *      wk_flight TYPE sflight.
 
-PARAMETERS: p_carrid TYPE sflight-carrid,
-            p_connid TYPE sflight-connid.
+PARAMETERS: p_carrid TYPE sflight-carrid OBLIGATORY,
+            p_connid TYPE sflight-connid OBLIGATORY.
 
 SELECT-OPTIONS: S_fldate for sflight-fldate.
 
@@ -29,50 +29,22 @@ FORM busca_dados.
     INTO TABLE it_sflight
     WHERE carrid EQ P_carrid
       AND connid EQ p_connid
-      AND fldate IN s_flight. 
+      AND fldate IN s_fldate. 
+    
+  IF sy-subrc NE 0.
+    MESSAGE 'nenhuma informação encontrada' TYPE 'E'.
+  ENDIF.
 ENDFORM.
 
 FORM Exibir_dados.
 CALL FUNCTION 'REUSE_ALV_LIST_DISPLAY'
-* EXPORTING
-*   I_INTERFACE_CHECK              = ' '
-*   I_BYPASSING_BUFFER             =
-*   I_BUFFER_ACTIVE                = ' '
-*   I_CALLBACK_PROGRAM             = ' '
-*   I_CALLBACK_PF_STATUS_SET       = ' '
-*   I_CALLBACK_USER_COMMAND        = ' '
-*   I_STRUCTURE_NAME               =
-*   IS_LAYOUT                      =
-*   IT_FIELDCAT                    =
-*   IT_EXCLUDING                   =
-*   IT_SPECIAL_GROUPS              =
-*   IT_SORT                        =
-*   IT_FILTER                      =
-*   IS_SEL_HIDE                    =
-*   I_DEFAULT                      = 'X'
-*   I_SAVE                         = ' '
-*   IS_VARIANT                     =
-*   IT_EVENTS                      =
-*   IT_EVENT_EXIT                  =
-*   IS_PRINT                       =
-*   IS_REPREP_ID                   =
-*   I_SCREEN_START_COLUMN          = 0
-*   I_SCREEN_START_LINE            = 0
-*   I_SCREEN_END_COLUMN            = 0
-*   I_SCREEN_END_LINE              = 0
-*   IR_SALV_LIST_ADAPTER           =
-*   IT_EXCEPT_QINFO                =
-*   I_SUPPRESS_EMPTY_DATA          = ABAP_FALSE
-*   IO_SALV_ADAPTER                =
-*   O_COMMON_HUB                   =
-* IMPORTING
-*   E_EXIT_CAUSED_BY_CALLER        =
-*   ES_EXIT_CAUSED_BY_USER         =
+  EXPORTING
+  I_STRUCTURE_NAME               = 'SFLIGHT'
   TABLES
-    t_outtab                       =
-* EXCEPTIONS
-*   PROGRAM_ERROR                  = 1
-*   OTHERS                         = 2
+    t_outtab                       = it_sflight
+   EXCEPTIONS
+     PROGRAM_ERROR                  = 1
+     OTHERS                         = 2
           .
 IF sy-subrc <> 0.
 * Implement suitable error handling here
